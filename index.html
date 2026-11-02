@@ -108,8 +108,11 @@
         </div>
         <div class="p-4 border-b border-[#d3dcd8] no-print">
           <h3 class="text-sm font-semibold mb-2" data-i18n="decision">Officer decision</h3>
+          <label for="admin-token" class="block text-xs text-[#10231f]/70 mb-1" data-i18n="officerToken">Officer token</label>
+          <input id="admin-token" type="password" autocomplete="off" class="w-full border border-[#d3dcd8] rounded px-2 py-1.5 text-sm mb-2" aria-describedby="admin-token-help">
           <div class="flex gap-2"><button id="approve" class="flex-1 py-2 rounded bg-[#2f7d4f] text-white text-sm font-medium" type="button" data-i18n="approve">Approve plan</button>
             <button id="reject" class="flex-1 py-2 rounded border border-[#c2410c] text-[#c2410c] text-sm font-medium" type="button" data-i18n="reject">Reject</button></div>
+          <p id="admin-token-help" class="text-xs text-[#10231f]/60 mt-1" data-i18n="tokenHelp">Enter the ADMIN_TOKEN from the server .env. It is not saved in the browser.</p>
           <p class="text-xs text-[#10231f]/60 mt-2" data-i18n="notice">Decision support only. Relocation is never executed automatically.</p>
         </div>
         <div class="p-4"><h3 class="text-sm font-semibold mb-2" data-i18n="audit">Audit log</h3><ul id="audit" class="text-xs space-y-1 text-[#10231f]/70"></ul></div>

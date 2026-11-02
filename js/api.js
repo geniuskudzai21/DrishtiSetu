@@ -3,7 +3,11 @@ async function request(path, options = {}) {
     ...options,
     headers: {"Content-Type":"application/json", ...(options.headers || {})}
   });
-  if (!response.ok) throw new Error(`Request failed (${response.status}) for ${path}`);
+  if (!response.ok) {
+    const error = new Error(`Request failed (${response.status}) for ${path}`);
+    error.status = response.status;
+    throw error;
+  }
   return response.json();
 }
 
@@ -13,8 +17,10 @@ export const API = {
   chat: (settlementId, message) => request("/api/chat", {
     method:"POST", body:JSON.stringify({settlementId,message})
   }),
-  decision: (settlementId, action) => request("/api/decisions", {
-    method:"POST", body:JSON.stringify({settlementId,action})
+  decision: (settlementId, action, adminToken) => request("/api/decisions", {
+    method:"POST",
+    headers:{Authorization:`Bearer ${adminToken}`},
+    body:JSON.stringify({settlementId,action})
   }),
   audit: () => request("/api/audit"),
   hazardZones: () => request("/api/hazard-zones")

@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: drishtisetu-api
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: ADMIN_TOKEN
+        sync: false

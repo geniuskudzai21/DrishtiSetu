@@ -43,9 +43,6 @@ function normalizeChat(value){
   if (typeof value === "string") return value;
   return String(firstValue(value,["answer","response","message","text"],""));
 }
-function localAudit(action){
-  state.audit.unshift({settlementId:state.selected.id,action,who:"SDMA Officer",time:new Date().toLocaleTimeString()});
-}
 function render(){
   renderList(state.settlements,state.selected?.id,selectSettlement);
   if (state.selected) renderDetail(state.selected,state.audit,focusSite);
@@ -128,18 +125,18 @@ async function askAssistant(){
 
 async function decide(action){
   if (!state.selected) return;
+  const adminToken = byId("admin-token").value.trim();
+  if (!adminToken){
+    showError(t("tokenRequired"));
+    return;
+  }
   try {
-    const result = await API.decision(state.selected.id,action);
-    const returnedAudit = result?.audit || result?.entry;
-    if (returnedAudit) state.audit.unshift(returnedAudit);
-    else {
-      try { state.audit = unwrapList(await API.audit(),"audit"); }
-      catch (error) { console.error(error); localAudit(action); }
-    }
+    const result = await API.decision(state.selected.id,action,adminToken);
+    state.audit.unshift(result);
+    hideError();
   } catch (error) {
     console.error(error);
-    localAudit(action);
-    showError(t("decisionError"));
+    showError(error.status === 401 ? t("invalidToken") : t("decisionError"));
   }
   renderAudit(state.audit,state.selected.id);
 }
